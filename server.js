@@ -70,6 +70,7 @@ app.post("/message", function(request, response) {
   io.sockets.emit("incomingMessage", {message: message, name: name});
   // respond to sender client with a 200 success
   response.json(200, {message: "Message received"});
+  response.render("wtf")
 });
 
 // Socket.IO events

@@ -68,12 +68,7 @@ socket.on('error', function(reason) {
 });
 
 socket.on('guestPlaySong', function(data){
-  setTimeout(function(){widget.pause()}, 3000);
-  setTimeout(function(){widget.play()}, 5000);
   console.log(data)
-  console.log(data.song)
-  console.log(data.uri)
-  console.log(data.time)
 })
 
 // ajax call to send the message to the server's post route and trigger the
@@ -119,28 +114,29 @@ $('#outgoingMessage').on('keydown', outgoingMessageKeyDown);
 $('#outgoingMessage').on('keyup', outgoingMessageKeyUp);
 $('#name').on('focusout', nameFocusOut);
 $('#send').on('click', sendMessage);
-var widgetIframe = $('#sc-widget')[0]
-widget = SC.Widget(widgetIframe);
 
 
+SC.initialize({
+    client_id: "d8eb7a8be0cc38d451a51d4d223ee84b",
+    redirect_uri: "http://localhost:8080/",
+  });
 
-widget.bind(SC.Widget.Events.PLAY, function() {
-    widget.getCurrentSound(function(currentSound) {
-      currentSong = currentSound
-      console.log('sound ' + currentSound.title + 'began to play');
-      widget.getPosition(hostBeganPlaying.bind(widget))
-    });
-})
+SC.whenStreamingReady(playMyShit)
+function playMyShit() {
+object = SC.stream("https://soundcloud.com/fuckmylife/dat-kick-doe", function(sound){
+  sound.play();
+});
+}
 
 function hostBeganPlaying(data){
-    console.log(currentSong.title)
     console.log(data)
     socket.emit('hostPlayedSound', {song: currentSong.title, uri: currentSong.uri, time: data })
 }
 
 
-
 }
+
+
 
 // var widgetIframe = document.getElementById('sc-widget'),
 // widget = SC.Widget(widgetIframe);
